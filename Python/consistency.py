@@ -19,7 +19,7 @@ the blob in specified in the line 26 and the 'dir' argument, to have
 their trailing tabs and spaces stripped. 
 
   It also ensures that those files EOL character is the one specified in
-line 31 and 32, and that the file will end with and EOL character.
+line 31 and 32, and that the file will end with an EOL character.
 """
 def refactor(dir):
 	os.chdir((dir+"/"))
