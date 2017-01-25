@@ -1,6 +1,6 @@
 #
 # consistency.py - v0.0.1
-# License not decided yet.
+# MIT License
 #
 
 #--------------------------------------------#
