@@ -19,11 +19,43 @@ If cfg_file=None, it searches automatically for the file.
 See also: https://github.com/yvt/openspades/wiki/User-Resource-Directory
 """
 def cfg_file_to_markdown(cfg_file=None):
-    # no configuration file given, use platform-specific default one
+    # List for storing the list of configurations
+    cfg_list = []
+
+    # List of config variables that should have an link added to them
+    cfg_link_list = ["cg_Minimap_Player_Color"]
+
+    # No configuration file given, use platform-specific default one
     if cfg_file == None:
         cfg_file = get_spconfig_path()
 
-    print(("Parsing %s " % cfg_file))
+    # Open SPConfig.cfg in read-only mode
+    sp_cfg = open(cfg_file, "r")
+
+    # Parse each line
+    for line in sp_cfg:
+        _line = line.lstrip()
+        if (_line.startswith("#")) or (_line.rstrip() == ""):
+            continue
+
+        key = _line.split(":", 1)[0] # Everything before the ":' character
+
+        cfg_list.append(key)
+
+    # Close the file
+    sp_cfg.close()
+
+    # Output the markdown list
+    for cfg in cfg_list:
+        cfg_md = ""
+
+        if cfg in cfg_link_list:
+            link = "#" + cfg.lower()
+            cfg_md = " * [{0}]({1})".format(cfg, link)
+        else:
+            cfg_md = " * {0}".format(cfg)
+
+        print(cfg_md)
 
 def get_spconfig_path():
     # Windows Location: %APPDATA%\OpenSpades\Resources
@@ -37,8 +69,8 @@ def get_spconfig_path():
         if appdata == None:
             raise RuntimeError("%APPDATA% not defined! (wtf?)")
 
-        cfg_file = os.path.join([appdata, "OpenSpades", "Resources",
-                                 "SPConfig.cfg"])
+        cfg_file = os.path.join(appdata, "OpenSpades", "Resources",
+                                "SPConfig.cfg")
 
         return cfg_file
 
@@ -48,15 +80,20 @@ def get_spconfig_path():
         if xdg == None:
             # Default to $HOME/.local/share, as defined by the specs
             home = os.path.expanduser('~')
-            xdg = os.path.join([home, ".local", "share"])
+            xdg = os.path.join(home, ".local", "share")
 
-        cfg_file = os.path.join([xdg, "openspades", "Resources",
-                                 "SPConfig.cfg"])
+        cfg_file = os.path.join(xdg, "openspades", "Resources",
+                                "SPConfig.cfg")
 
         return cfg_file
 
     elif platform.system() == "Darwin":
-        raise NotImplementedError("Darwin not implemented yet")
+        home = os.path.expanduser('~')
+
+        cfg_file = os.path.join(home, "Library", "Application Support",
+                                "OpenSpades", "Resources")
+
+        return cfg_file
 
     else:
         return None;
@@ -71,7 +108,7 @@ Available actions:
   config_to_markdown [FILE]: Output the markdown index list of an SPConfig.cfg
       note: The [FILE] argument is optional.
 
-
+It's recommended to redirect the output to a file (e.g. tools.py > output.md)
 """
 
     print(help_text)
@@ -95,5 +132,8 @@ else:
     if sys.argv[1] == "config_to_markdown":
         if len(sys.argv) == 3:
             cfg_file_to_markdown(sys.argv[2])
+        elif len(sys.argv) > 3:
+            raise RuntimeError("Your provided more than 2 arguments to the"\
+                               " config_to_markdown action!")
         else:
             cfg_file_to_markdown()
