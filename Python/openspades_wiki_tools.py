@@ -18,6 +18,8 @@ If cfg_file=None, it searches automatically for the file.
 
 See also: https://github.com/yvt/openspades/wiki/User-Resource-Directory
 """
+
+
 def cfg_file_to_markdown(cfg_file=None):
     # List for storing the list of configurations
     cfg_list = []
@@ -38,7 +40,7 @@ def cfg_file_to_markdown(cfg_file=None):
         if (_line.startswith("#")) or (_line.rstrip() == ""):
             continue
 
-        key = _line.split(":", 1)[0] # Everything before the ":' character
+        key = _line.split(":", 1)[0]  # Everything before the ":' character
 
         cfg_list.append(key)
 
@@ -56,6 +58,7 @@ def cfg_file_to_markdown(cfg_file=None):
             cfg_md = " * {0}".format(cfg)
 
         print(cfg_md)
+
 
 def get_spconfig_path():
     # Windows Location: %APPDATA%\OpenSpades\Resources
@@ -96,11 +99,13 @@ def get_spconfig_path():
         return cfg_file
 
     else:
-        return None;
+        return None
 
 # TODO: Colors
+
+
 def display_help():
-    help_text="""openspades_wiki_tool.py - v0.0.0 (not a release!)
+    help_text = """openspades_wiki_tool.py - v0.0.0 (not a release!)
 
 Usage: python openspades_wiki_tools.py [action] [action_arguments]
 
@@ -113,7 +118,7 @@ It's recommended to redirect the output to a file (e.g. tools.py > output.md)
 
     print(help_text)
 
-NO_ARGUMENTS = (len(sys.argv) == 1) # First argument is the filename
+NO_ARGUMENTS = (len(sys.argv) == 1)  # First argument is the filename
 INVALID_ACTION = True
 
 try:
@@ -125,7 +130,7 @@ if NO_ARGUMENTS:
     display_help()
 
 elif INVALID_ACTION:
-    print("Invalid action selected! Run this script with no arguments to see"\
+    print("Invalid action selected! Run this script with no arguments to see"
           " the help text")
 
 else:
@@ -133,7 +138,7 @@ else:
         if len(sys.argv) == 3:
             cfg_file_to_markdown(sys.argv[2])
         elif len(sys.argv) > 3:
-            raise RuntimeError("Your provided more than 2 arguments to the"\
+            raise RuntimeError("Your provided more than 2 arguments to the"
                                " config_to_markdown action!")
         else:
             cfg_file_to_markdown()
